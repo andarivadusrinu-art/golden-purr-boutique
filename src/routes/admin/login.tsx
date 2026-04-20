@@ -53,9 +53,24 @@ function AdminLogin() {
           {mode === "signin" ? "Admin Sign In" : "Create Admin Account"}
         </h1>
         {session && !isAdmin && !loading && (
-          <p className="mt-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-            You're signed in as {session.user.email}, but this account doesn't have admin access.
-          </p>
+          <div className="mt-4 space-y-3 rounded-md bg-secondary p-3 text-sm text-foreground">
+            <p>You're signed in as <span className="font-medium">{session.user.email}</span>, but this account doesn't have admin access.</p>
+            <button
+              type="button"
+              onClick={async () => {
+                const { data, error: err } = await supabase.rpc("claim_first_admin");
+                if (err) { setError(err.message); return; }
+                if (data === true) {
+                  window.location.href = "/admin";
+                } else {
+                  setError("An admin already exists. Ask them to grant you access.");
+                }
+              }}
+              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+            >
+              Claim admin access (first user only)
+            </button>
+          </div>
         )}
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
