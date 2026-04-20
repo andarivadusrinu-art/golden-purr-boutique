@@ -12,7 +12,7 @@ const NAV = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [shopName, setShopName] = useState("Aurum 1g Gold");
+  const [shopName, setShopName] = useState("AndarivaduSrinu");
 
   useEffect(() => {
     supabase
