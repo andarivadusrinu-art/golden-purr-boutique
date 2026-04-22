@@ -3,7 +3,13 @@
 -- Consolidated schema for Aurum 1g Gold
 
 -- Clean up existing objects
-DROP TRIGGER IF EXISTS products_updated_at ON public.products;
+DO $$ 
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'products') THEN
+    DROP TRIGGER IF EXISTS products_updated_at ON public.products;
+  END IF;
+END $$;
+
 DROP FUNCTION IF EXISTS public.update_updated_at();
 DROP FUNCTION IF EXISTS public.claim_first_admin();
 DROP FUNCTION IF EXISTS public.has_role(UUID, public.app_role);
