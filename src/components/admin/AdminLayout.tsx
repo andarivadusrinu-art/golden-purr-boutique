@@ -30,29 +30,29 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen bg-secondary/20">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border bg-card md:flex">
-        <div className="flex h-16 items-center border-b border-border px-6">
-          <Link to="/" className="font-serif text-xl text-primary font-bold">AndarivaduSrinu</Link>
+      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border bg-primary text-primary-foreground md:flex shadow-2xl">
+        <div className="flex h-20 items-center border-b border-white/10 px-6">
+          <Link to="/" className="font-serif text-2xl text-accent font-bold tracking-tight">AndarivaduSrinu</Link>
         </div>
-        <nav className="flex-1 space-y-1 p-4">
+        <nav className="flex-1 space-y-1 p-4 mt-4">
           {SIDEBAR_LINKS.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              activeProps={{ className: "!bg-primary !text-primary-foreground" }}
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-primary-foreground/70 transition-all hover:bg-white/5 hover:text-white"
+              activeProps={{ className: "!bg-accent !text-accent-foreground shadow-lg shadow-accent/10" }}
             >
               <link.icon className="h-4 w-4" />
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className="border-t border-border p-4">
+        <div className="border-t border-white/10 p-4">
           <button
             onClick={() => supabase.auth.signOut().then(() => navigate({ to: "/admin/login" }))}
-            className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+            className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
           >
             <LogOut className="h-4 w-4" />
             Sign Out

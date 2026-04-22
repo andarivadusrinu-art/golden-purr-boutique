@@ -76,33 +76,37 @@ function Index() {
   return (
     <StorefrontLayout>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-secondary/60">
+      <section className="relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-accent/5 blur-3xl" />
+        </div>
         <motion.div 
-          className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-16 md:grid-cols-2 md:py-24"
+          className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 py-16 md:grid-cols-2 md:py-24"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <div className="space-y-6">
-            <motion.p variants={itemVariants} className="text-sm uppercase tracking-[0.3em] text-gold">Hallmarked · 22K · 1 Gram</motion.p>
-            <motion.h1 variants={itemVariants} className="font-serif text-4xl leading-tight text-primary md:text-6xl">
+            <motion.p variants={itemVariants} className="text-sm uppercase tracking-[0.3em] text-accent font-medium">Hallmarked · 22K · 1 Gram</motion.p>
+            <motion.h1 variants={itemVariants} className="font-serif text-4xl leading-tight text-foreground md:text-6xl">
               Pure 1 Gram Gold,<br />Crafted with Heart
             </motion.h1>
-            <motion.p variants={itemVariants} className="max-w-md text-base text-muted-foreground leading-relaxed">
+            <motion.p variants={itemVariants} className="max-w-md text-base text-foreground/80 leading-relaxed">
               Discover timeless necklaces, rings, earrings and nose rings — every piece a small treasure.
             </motion.p>
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-4">
               <Link
                 to="/category/$slug"
                 params={{ slug: "necklaces" }}
-                className="rounded-md bg-primary px-8 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 hover:scale-105 active:scale-95"
+                className="rounded-md bg-accent px-8 py-3.5 text-sm font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:scale-105 active:scale-95"
               >
                 Shop Collection
               </Link>
               <Link
                 to="/category/$slug"
                 params={{ slug: "rings" }}
-                className="rounded-md border border-primary px-8 py-3.5 text-sm font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:scale-105 active:scale-95"
+                className="rounded-md border border-accent/50 px-8 py-3.5 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:scale-105 active:scale-95"
               >
                 Explore Rings
               </Link>
@@ -151,7 +155,7 @@ function Index() {
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5 text-primary-foreground">
+              <div className="absolute inset-x-0 bottom-0 p-5 text-foreground">
                 <h3 className="font-serif text-xl">{c.name}</h3>
                 <p className="mt-1 text-xs uppercase tracking-wider opacity-90">Shop now →</p>
               </div>
@@ -162,11 +166,11 @@ function Index() {
 
       {/* Featured */}
       {featured.length > 0 && (
-        <section className="bg-secondary/40 py-16">
+        <section className="bg-white/5 py-16 backdrop-blur-sm">
           <div className="mx-auto max-w-7xl px-4">
-            <h2 className="text-center font-serif text-3xl text-primary md:text-4xl">Featured Pieces</h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              Handpicked favourites from our collection
+            <h2 className="text-center font-serif text-3xl text-primary md:text-4xl">Trending Pieces</h2>
+            <p className="mt-2 text-center text-sm text-primary-foreground/60">
+              Handpicked favourites from our collections
             </p>
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((p) => (

@@ -68,7 +68,7 @@ function CategoryPage() {
 
   return (
     <StorefrontLayout>
-      <div className="border-b border-border bg-secondary/40">
+      <div className="border-b border-white/5 bg-white/5 backdrop-blur-sm">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

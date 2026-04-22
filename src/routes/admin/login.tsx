@@ -2,9 +2,10 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdmin } from "@/lib/useAdmin";
+import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/admin/login")({
-  head: () => ({ meta: [{ title: "Admin Login | Aurum" }] }),
+  head: () => ({ meta: [{ title: "Admin Portal | AndarivaduSrinu" }] }),
   component: AdminLogin,
 });
 
@@ -46,15 +47,25 @@ function AdminLogin() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4">
-      <div className="w-full max-w-md rounded-md border border-border bg-card p-8 shadow-md">
-        <Link to="/" className="mb-6 block text-center font-serif text-2xl text-primary">Aurum 1g Gold</Link>
-        <h1 className="text-center font-serif text-2xl text-foreground">
-          {mode === "signin" ? "Admin Sign In" : "Create Admin Account"}
+    <div className="relative flex min-h-screen items-center justify-center bg-primary px-4 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-accent/5 blur-3xl" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl"
+      >
+        <Link to="/" className="mb-8 block text-center font-serif text-3xl text-accent font-bold tracking-tight">AndarivaduSrinu</Link>
+        <h1 className="text-center font-serif text-xl text-white/90">
+          {mode === "signin" ? "Admin Portal Access" : "Create Admin Account"}
         </h1>
+
         {session && !isAdmin && !loading && (
-          <div className="mt-4 space-y-3 rounded-md bg-secondary p-3 text-sm text-foreground">
-            <p>You're signed in as <span className="font-medium">{session.user.email}</span>, but this account doesn't have admin access.</p>
+          <div className="mt-6 space-y-3 rounded-xl bg-white/10 p-4 text-sm text-white/80 border border-white/10">
+            <p>Signed in as <span className="font-medium text-white">{session.user.email}</span>, but you don't have admin access.</p>
             <button
               type="button"
               onClick={async () => {
@@ -66,61 +77,65 @@ function AdminLogin() {
                   setError("An admin already exists. Ask them to grant you access.");
                 }
               }}
-              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+              className="rounded-md bg-accent px-4 py-2 text-xs font-bold text-accent-foreground hover:opacity-90 shadow-lg shadow-accent/20"
             >
               Claim admin access (first user only)
             </button>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">Email</label>
+            <label className="mb-2 block text-xs uppercase tracking-widest text-white/60 font-medium">Email</label>
             <input
               type="email"
               required
+              placeholder="admin@andarivadusrinu.art"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">Password</label>
+            <label className="mb-2 block text-xs uppercase tracking-widest text-white/60 font-medium">Password</label>
             <input
               type="password"
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
             />
           </div>
-          {error && <p className="rounded-md bg-secondary p-3 text-sm text-foreground">{error}</p>}
+
+          {error && <p className="rounded-md bg-destructive/20 border border-destructive/20 p-3 text-sm text-destructive-foreground">{error}</p>}
+
           <button
             type="submit"
             disabled={busy}
-            className="w-full rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="w-full rounded-md bg-accent px-4 py-3 text-sm font-bold text-accent-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 shadow-lg shadow-accent/20"
           >
-            {busy ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Account"}
+            {busy ? "Authorizing..." : mode === "signin" ? "Sign In to Dashboard" : "Create Account"}
           </button>
-          
-          <div className="flex flex-col gap-3 pt-2 text-center">
+
+          <div className="flex flex-col gap-4 pt-4 text-center">
             <button
               type="button"
               onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); }}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs text-white/40 hover:text-accent transition-colors"
             >
-              {mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in"}
+              {mode === "signin" ? "Need credentials? Sign up" : "Already have an account? Sign in"}
             </button>
-            
+
             <Link
               to="/forgot-password"
-              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs text-white/40 hover:text-accent transition-colors"
             >
               Forgot your password?
             </Link>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

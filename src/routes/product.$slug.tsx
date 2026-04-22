@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { StorefrontLayout } from "@/components/storefront/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { formatINR, buildWhatsAppLink } from "@/lib/format";
@@ -93,52 +94,77 @@ function ProductPage() {
   return (
     <StorefrontLayout>
       <div className="mx-auto max-w-7xl px-4 py-10 md:py-16">
-        <div className="mb-6 text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-primary">Home</Link> <span className="mx-2">/</span>
-          <span className="text-foreground">{product.name}</span>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-6 text-xs text-muted-foreground"
+        >
+          <Link to="/" className="hover:text-primary transition-colors">Home</Link> <span className="mx-2">/</span>
+          <span className="text-foreground font-medium">{product.name}</span>
+        </motion.div>
 
-        <div className="grid gap-10 md:grid-cols-2">
-          <div className="overflow-hidden rounded-md border border-border bg-secondary/40">
+        <div className="grid gap-10 lg:grid-cols-2">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-hidden rounded-lg border border-border bg-secondary/40 shadow-sm"
+          >
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="aspect-square w-full object-cover" />
+              <img src={product.image_url} alt={product.name} className="aspect-square w-full object-cover transition-transform duration-700 hover:scale-105" />
             ) : (
               <div className="flex aspect-square items-center justify-center text-muted-foreground">No image</div>
             )}
-          </div>
+          </motion.div>
 
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <p className="text-xs uppercase tracking-[0.3em] text-accent font-semibold">
               {Number(product.gold_weight_grams).toFixed(0)}g · {product.purity} Gold
             </p>
-            <h1 className="mt-3 font-serif text-3xl text-primary md:text-4xl">{product.name}</h1>
+            <h1 className="mt-4 font-serif text-4xl text-primary md:text-5xl">{product.name}</h1>
             {product.description && (
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground">{product.description}</p>
+              <p className="mt-8 text-base leading-relaxed text-muted-foreground/90">{product.description}</p>
             )}
 
-            <div className="mt-8 rounded-md border border-border bg-card p-5">
-              <h3 className="font-serif text-lg text-primary">Send an Enquiry</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Chat directly with {shopName} on WhatsApp for availability, current rate and to place an order.
+            <div className="mt-10 rounded-xl border border-primary/10 bg-primary/5 p-6 backdrop-blur-sm">
+              <h3 className="font-serif text-xl text-primary">Direct Enquiry</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Chat with {shopName} on WhatsApp for current gold rates, availability, and fast ordering.
               </p>
               <a
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-md bg-accent px-8 py-4 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <MessageCircle className="h-5 w-5" />
                 Enquire on WhatsApp
               </a>
             </div>
 
-            <ul className="mt-8 grid grid-cols-2 gap-4 border-t border-border pt-6 text-sm text-muted-foreground">
-              <li><span className="block text-foreground font-medium">Weight</span>{Number(product.gold_weight_grams).toFixed(3)} g</li>
-              <li><span className="block text-foreground font-medium">Purity</span>{product.purity}</li>
-              <li><span className="block text-foreground font-medium">Hallmark</span>BIS Hallmarked</li>
-              <li><span className="block text-foreground font-medium">Shipping</span>Pan-India dispatch</li>
-            </ul>
-          </div>
+            <div className="mt-10 grid grid-cols-2 gap-y-6 gap-x-8 border-t border-border pt-8">
+              <div>
+                <span className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Weight</span>
+                <span className="text-lg font-medium text-foreground">{Number(product.gold_weight_grams).toFixed(3)} g</span>
+              </div>
+              <div>
+                <span className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Purity</span>
+                <span className="text-lg font-medium text-foreground">{product.purity}</span>
+              </div>
+              <div>
+                <span className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Certification</span>
+                <span className="text-lg font-medium text-foreground">BIS Hallmarked</span>
+              </div>
+              <div>
+                <span className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Shipping</span>
+                <span className="text-lg font-medium text-foreground">Pan-India Courier</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </StorefrontLayout>
