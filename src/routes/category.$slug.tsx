@@ -45,6 +45,8 @@ export const Route = createFileRoute("/category/$slug")({
   component: CategoryPage,
 });
 
+import { motion } from "framer-motion";
+
 function CategoryPage() {
   const { category } = Route.useLoaderData();
   const [products, setProducts] = useState<ProductCardData[]>([]);
@@ -67,25 +69,40 @@ function CategoryPage() {
   return (
     <StorefrontLayout>
       <div className="border-b border-border bg-secondary/40">
-        <div className="mx-auto max-w-7xl px-4 py-12 text-center md:py-16">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto max-w-7xl px-4 py-12 text-center md:py-16"
+        >
           <p className="text-xs uppercase tracking-[0.3em] text-gold">Collection</p>
           <h1 className="mt-3 font-serif text-4xl text-primary md:text-5xl">{category.name}</h1>
           {category.description && (
             <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">{category.description}</p>
           )}
-        </div>
+        </motion.div>
       </div>
       <div className="mx-auto max-w-7xl px-4 py-12">
         {loading ? (
-          <p className="text-center text-muted-foreground">Loading…</p>
+          <p className="text-center text-muted-foreground py-20">Loading…</p>
         ) : products.length === 0 ? (
-          <p className="text-center text-muted-foreground">No products yet in this collection.</p>
+          <p className="text-center text-muted-foreground py-20">No products yet in this collection.</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {products.map((p) => (
               <ProductCard key={p.id} p={p} />
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </StorefrontLayout>

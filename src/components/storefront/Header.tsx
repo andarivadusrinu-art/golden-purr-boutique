@@ -11,9 +11,11 @@ const NAV = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+import { motion, AnimatePresence } from "framer-motion";
+
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [shopName, setShopName] = useState("Aurum 1g Gold");
+  const [shopName, setShopName] = useState("AndarivaduSrinu");
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -39,9 +41,9 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
-        <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-primary">
+        <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity">
           AndarivaduSrinu
         </Link>
         
@@ -52,45 +54,62 @@ export function Header() {
                 key={n.label}
                 to={n.to}
                 {...(n as any).params ? { params: (n as any).params } : {}}
-                className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+                className="relative text-sm font-medium text-foreground/80 transition-colors hover:text-primary group"
                 activeProps={{ className: "text-primary" }}
               >
                 {n.label}
+                <motion.span 
+                  className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all group-hover:w-full"
+                  layoutId={`nav-underline-${n.label}`}
+                />
               </Link>
             ))}
           </nav>
 
           <div className="flex items-center gap-2 border-l border-border pl-4 md:pl-8">
-            {searchOpen ? (
-              <form onSubmit={handleSearch} className="flex animate-in fade-in slide-in-from-right-4">
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Search pieces..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="w-32 rounded-l-md border border-input bg-background px-3 py-1 text-sm focus:outline-none md:w-48"
-                />
-                <button type="submit" className="rounded-r-md bg-primary px-3 py-1 text-primary-foreground">
-                  <Search className="h-4 w-4" />
-                </button>
-                <button type="button" onClick={() => setSearchOpen(false)} className="ml-1 p-1 text-muted-foreground">
-                  <X className="h-4 w-4" />
-                </button>
-              </form>
-            ) : (
-              <button
-                aria-label="Search"
-                onClick={() => setSearchOpen(true)}
-                className="p-1 text-foreground/80 hover:text-primary"
-              >
-                <Search className="h-5 w-5" />
-              </button>
-            )}
+            <AnimatePresence mode="wait">
+              {searchOpen ? (
+                <motion.form 
+                  key="search-form"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  onSubmit={handleSearch} 
+                  className="flex items-center"
+                >
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search pieces..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-32 rounded-l-md border border-input bg-background px-3 py-1.5 text-sm focus:ring-1 focus:ring-primary focus:outline-none md:w-48"
+                  />
+                  <button type="submit" className="rounded-r-md bg-primary px-3 py-1.5 text-primary-foreground">
+                    <Search className="h-4 w-4" />
+                  </button>
+                  <button type="button" onClick={() => setSearchOpen(false)} className="ml-1 p-1.5 text-muted-foreground hover:text-foreground">
+                    <X className="h-4 w-4" />
+                  </button>
+                </motion.form>
+              ) : (
+                <motion.button
+                  key="search-btn"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  aria-label="Search"
+                  onClick={() => setSearchOpen(true)}
+                  className="p-1.5 text-foreground/80 hover:text-primary transition-colors"
+                >
+                  <Search className="h-5 w-5" />
+                </motion.button>
+              )}
+            </AnimatePresence>
             
             <button
               aria-label="Toggle menu"
-              className="md:hidden text-foreground ml-2"
+              className="md:hidden text-foreground ml-2 p-1.5"
               onClick={() => setOpen((o) => !o)}
             >
               {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -98,24 +117,31 @@ export function Header() {
           </div>
         </div>
       </div>
-      {open && (
-        <nav className="border-t border-border bg-background md:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col px-4 py-2">
-            {NAV.map((n) => (
-              <Link
-                key={n.label}
-                to={n.to}
-                {...(n as any).params ? { params: (n as any).params } : {}}
-                onClick={() => setOpen(false)}
-                className="py-3 text-base font-medium text-foreground/80 transition-colors hover:text-primary"
-                activeProps={{ className: "text-primary" }}
-              >
-                {n.label}
-              </Link>
-            ))}
-          </div>
-        </nav>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.nav 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-t border-border bg-background md:hidden"
+          >
+            <div className="mx-auto flex max-w-7xl flex-col px-4 py-4 space-y-1">
+              {NAV.map((n) => (
+                <Link
+                  key={n.label}
+                  to={n.to}
+                  {...(n as any).params ? { params: (n as any).params } : {}}
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-lg font-medium text-foreground/80 transition-colors hover:text-primary active:bg-secondary/20 rounded-md px-2"
+                  activeProps={{ className: "text-primary bg-secondary/10" }}
+                >
+                  {n.label}
+                </Link>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

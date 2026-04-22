@@ -1,6 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { motion, Variants } from "framer-motion";
 import { StorefrontLayout } from "@/components/storefront/Layout";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 0.6, 
+      ease: [0.22, 1, 0.36, 1] 
+    } 
+  }
+};
 import { ProductCard, type ProductCardData } from "@/components/storefront/ProductCard";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -53,40 +77,49 @@ function Index() {
     <StorefrontLayout>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-secondary/60">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-gold">Hallmarked · 22K · 1 Gram</p>
-            <h1 className="mt-4 font-serif text-4xl leading-tight text-primary md:text-6xl">
+        <motion.div 
+          className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-16 md:grid-cols-2 md:py-24"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="space-y-6">
+            <motion.p variants={itemVariants} className="text-sm uppercase tracking-[0.3em] text-gold">Hallmarked · 22K · 1 Gram</motion.p>
+            <motion.h1 variants={itemVariants} className="font-serif text-4xl leading-tight text-primary md:text-6xl">
               Pure 1 Gram Gold,<br />Crafted with Heart
-            </h1>
-            <p className="mt-6 max-w-md text-base text-muted-foreground">
+            </motion.h1>
+            <motion.p variants={itemVariants} className="max-w-md text-base text-muted-foreground leading-relaxed">
               Discover timeless necklaces, rings, earrings and nose rings — every piece a small treasure.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            </motion.p>
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-4">
               <Link
                 to="/category/$slug"
                 params={{ slug: "necklaces" }}
-                className="rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                className="rounded-md bg-primary px-8 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 hover:scale-105 active:scale-95"
               >
                 Shop Collection
               </Link>
               <Link
                 to="/category/$slug"
                 params={{ slug: "rings" }}
-                className="rounded-md border border-primary px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                className="rounded-md border border-primary px-8 py-3.5 text-sm font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:scale-105 active:scale-95"
               >
                 Explore Rings
               </Link>
-            </div>
+            </motion.div>
           </div>
-          <div className="relative">
+          <motion.div 
+            variants={itemVariants}
+            className="relative"
+          >
+            <div className="absolute -inset-4 bg-primary/5 blur-3xl rounded-full" />
             <img
               src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=900&q=80"
               alt="Elegant 1 gram gold jewellery"
-              className="aspect-[3/2] w-full rounded-md object-cover shadow-2xl md:aspect-video"
+              className="relative aspect-[3/2] w-full rounded-md object-cover shadow-2xl md:aspect-video"
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Categories */}
