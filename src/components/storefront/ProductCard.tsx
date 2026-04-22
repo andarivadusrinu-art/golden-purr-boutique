@@ -24,9 +24,9 @@ export function ProductCard({ p }: { p: ProductCardData }) {
       <Link
         to="/product/$slug"
         params={{ slug: p.slug }}
-        className="group block overflow-hidden rounded-md border border-border bg-card transition-shadow hover:shadow-xl"
+        className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all hover:shadow-[0_0_30px_rgba(var(--color-accent),0.1)] hover:border-accent/30 backdrop-blur-md"
       >
-        <div className="aspect-square w-full overflow-hidden bg-secondary/40">
+        <div className="aspect-square w-full overflow-hidden bg-white/5">
           {p.image_url ? (
             <img
               src={p.image_url}
@@ -38,10 +38,10 @@ export function ProductCard({ p }: { p: ProductCardData }) {
             <div className="flex h-full w-full items-center justify-center text-muted-foreground">No image</div>
           )}
         </div>
-        <div className="p-4 bg-background/50 backdrop-blur-sm">
-          <h3 className="font-serif text-lg leading-tight text-foreground group-hover:text-primary transition-colors">{p.name}</h3>
-          <p className="mt-1 text-xs uppercase tracking-wider text-gold/80">
-            {Number(p.gold_weight_grams).toFixed(0)}g · {p.purity}
+        <div className="p-5 border-t border-white/5">
+          <h3 className="font-serif text-xl leading-tight text-foreground group-hover:text-accent transition-colors">{p.name}</h3>
+          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-accent/80 font-medium">
+            {Number(p.gold_weight_grams).toFixed(0)}g · {p.purity} Gold
           </p>
         </div>
       </Link>

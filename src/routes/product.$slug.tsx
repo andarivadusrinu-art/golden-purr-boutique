@@ -108,7 +108,7 @@ function ProductPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="overflow-hidden rounded-lg border border-border bg-secondary/40 shadow-sm"
+            className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-sm"
           >
             {product.image_url ? (
               <img src={product.image_url} alt={product.name} className="aspect-square w-full object-cover transition-transform duration-700 hover:scale-105" />
@@ -122,26 +122,26 @@ function ProductPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-accent font-semibold">
+            <p className="text-xs uppercase tracking-[0.4em] text-accent font-semibold">
               {Number(product.gold_weight_grams).toFixed(0)}g · {product.purity} Gold
             </p>
-            <h1 className="mt-4 font-serif text-4xl text-primary md:text-5xl">{product.name}</h1>
+            <h1 className="mt-4 font-serif text-5xl text-foreground md:text-6xl leading-tight">{product.name}</h1>
             {product.description && (
-              <p className="mt-8 text-base leading-relaxed text-muted-foreground/90">{product.description}</p>
+              <p className="mt-8 text-lg leading-relaxed text-muted-foreground/80">{product.description}</p>
             )}
 
-            <div className="mt-10 rounded-xl border border-primary/10 bg-primary/5 p-6 backdrop-blur-sm">
-              <h3 className="font-serif text-xl text-primary">Direct Enquiry</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Chat with {shopName} on WhatsApp for current gold rates, availability, and fast ordering.
+            <div className="mt-10 rounded-2xl border border-accent/20 bg-accent/5 p-8 backdrop-blur-xl shadow-xl shadow-accent/5">
+              <h3 className="font-serif text-2xl text-accent">Direct Enquiry</h3>
+              <p className="mt-3 text-base text-muted-foreground">
+                Chat with <span className="text-foreground font-medium">{shopName}</span> on WhatsApp for current gold rates, availability, and secure ordering.
               </p>
               <a
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-md bg-accent px-8 py-4 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+                className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-xl bg-accent px-8 py-4 text-lg font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
               >
-                <MessageCircle className="h-5 w-5" />
+                <MessageCircle className="h-6 w-6" />
                 Enquire on WhatsApp
               </a>
             </div>

@@ -15,7 +15,7 @@ export function StarBackground() {
   }, []);
 
   const particlesLoaded = async (container?: Container): Promise<void> => {
-    console.log("Stars Loaded", container);
+    // Stars loaded
   };
 
   const options: ISourceOptions = {

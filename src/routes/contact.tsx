@@ -24,6 +24,27 @@ function ContactPage() {
       email,
       message,
     });
+
+    if (!error) {
+      // Trigger email notification
+      await supabase.functions.invoke("send-email", {
+        body: {
+          to: "andarivadusrinu@gmail.com", // Shop owner email
+          subject: `New Inquiry from ${name}`,
+          html: `
+            <div style="font-family: serif; color: #1a1a1a;">
+              <h2 style="color: #d4af37;">New Inquiry Received</h2>
+              <p><strong>From:</strong> ${name} (${email})</p>
+              <p><strong>Message:</strong></p>
+              <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #d4af37;">
+                ${message}
+              </div>
+            </div>
+          `,
+        },
+      });
+    }
+
     setBusy(false);
     if (error) {
       toast.error(error.message);
@@ -37,23 +58,24 @@ function ContactPage() {
 
   return (
     <StorefrontLayout>
-      <section className="relative overflow-hidden bg-primary py-20 text-primary-foreground">
-        <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-accent blur-3xl" />
+      <section className="relative overflow-hidden py-20 md:py-24">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 text-center">
           <motion.p 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs uppercase tracking-[0.3em] text-accent mb-4"
+            className="text-[10px] uppercase tracking-[0.4em] text-accent font-bold mb-4"
           >
             Get In Touch
           </motion.p>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-6xl text-foreground"
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="font-serif text-4xl md:text-6xl text-foreground leading-tight"
           >
             Contact Us
           </motion.h1>
@@ -101,46 +123,46 @@ function ContactPage() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-border bg-card p-8 shadow-xl"
+            className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground font-medium">Name</label>
+                  <label className="mb-2 block text-xs uppercase tracking-widest text-accent font-medium">Name</label>
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent/50 outline-none transition-all"
+                    className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground focus:ring-2 focus:ring-accent/50 outline-none transition-all placeholder:text-foreground/30"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground font-medium">Email</label>
+                  <label className="mb-2 block text-xs uppercase tracking-widest text-accent font-medium">Email</label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent/50 outline-none transition-all"
+                    className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground focus:ring-2 focus:ring-accent/50 outline-none transition-all placeholder:text-foreground/30"
                   />
                 </div>
               </div>
               <div>
-                <label className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground font-medium">Message</label>
+                <label className="mb-2 block text-xs uppercase tracking-widest text-accent font-medium">Message</label>
                 <textarea
                   required
                   rows={5}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent/50 outline-none transition-all"
+                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground focus:ring-2 focus:ring-accent/50 outline-none transition-all placeholder:text-foreground/30"
                   placeholder="Tell us which piece you are interested in..."
                 />
               </div>
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full rounded-md bg-primary px-8 py-4 text-sm font-bold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-primary/10"
+                className="w-full rounded-md bg-accent px-8 py-4 text-sm font-bold text-accent-foreground transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-accent/20"
               >
                 {busy ? "Sending..." : "Send Message"}
               </button>

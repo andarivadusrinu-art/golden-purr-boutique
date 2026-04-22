@@ -76,109 +76,116 @@ function AdminUsers() {
 
   return (
     <AdminLayout title="Team Management">
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-foreground">Royal Council</h1>
+        <p className="mt-2 text-muted-foreground">Manage the curators and architects of your digital kingdom.</p>
+      </div>
+
+      <div className="grid gap-12 lg:grid-cols-2">
         {/* Admins List */}
-        <section>
-          <div className="mb-6">
-            <h2 className="font-serif text-2xl text-primary flex items-center gap-2">
-              <Shield className="h-5 w-5" /> Active Admins
+        <section className="space-y-8">
+          <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <h2 className="font-serif text-2xl text-foreground flex items-center gap-3">
+              <Shield className="h-6 w-6 text-accent" /> Active Curators
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">People who have full access to this dashboard</p>
+            <span className="rounded-full bg-accent/10 px-3 py-1 text-[10px] font-bold text-accent uppercase tracking-widest border border-accent/20">
+              {admins.length} Admins
+            </span>
           </div>
-          <div className="overflow-hidden rounded-md border border-border bg-card">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-6 py-4 font-medium">User ID / Email</th>
-                  <th className="px-6 py-4 font-medium">Added</th>
-                  <th className="px-6 py-4 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {loading ? (
-                  <tr><td colSpan={3} className="px-6 py-8 text-center text-muted-foreground">Loading...</td></tr>
-                ) : admins.map((admin) => (
-                  <tr key={admin.user_id} className="hover:bg-secondary/30 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-mono text-xs text-muted-foreground truncate max-w-[150px]" title={admin.user_id}>
-                        {admin.user_id}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-muted-foreground">
-                      {format(new Date(admin.created_at), 'MMM d, yyyy')}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => revokeAdmin(admin.user_id)}
-                        className="rounded p-1 text-destructive hover:bg-destructive/10"
-                        title="Revoke access"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          <div className="grid gap-4">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-r-transparent" />
+                <p className="text-[10px] uppercase tracking-widest text-white/20">Identifying Council Members...</p>
+              </div>
+            ) : admins.map((admin) => (
+              <div key={admin.user_id} className="group relative flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-6 transition-all hover:bg-white/10">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center text-accent font-serif text-xl border border-white/5 group-hover:scale-105 transition-transform">
+                    {admin.user_id.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground group-hover:text-accent transition-colors">Admin Member</h3>
+                    <p className="font-mono text-[10px] text-white/20 truncate max-w-[150px]">{admin.user_id}</p>
+                    <p className="mt-1 text-[9px] uppercase tracking-widest text-white/40">Joined {format(new Date(admin.created_at), 'MMM d, yyyy')}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => revokeAdmin(admin.user_id)}
+                  className="rounded-xl border border-destructive/20 bg-destructive/5 p-3 text-destructive hover:bg-destructive/20 transition-all opacity-0 group-hover:opacity-100"
+                  title="Revoke access"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </button>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Invitations Management */}
-        <section className="space-y-8">
-          <div>
-            <div className="mb-6">
-              <h2 className="font-serif text-2xl text-primary flex items-center gap-2">
-                <UserPlus className="h-5 w-5" /> Invite New Admin
+        <section className="space-y-12">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md shadow-2xl">
+            <div className="mb-8">
+              <h2 className="font-serif text-2xl text-foreground flex items-center gap-3">
+                <UserPlus className="h-6 w-6 text-accent" /> Summon New Admin
               </h2>
-              <p className="mt-1 text-sm text-muted-foreground">Send an invitation to someone you trust</p>
+              <p className="mt-2 text-sm text-muted-foreground">Generate an exclusive portal link for a trusted associate.</p>
             </div>
-            <form onSubmit={handleInvite} className="flex gap-2 p-4 rounded-md border border-border bg-card shadow-sm">
-              <div className="relative flex-1">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            
+            <form onSubmit={handleInvite} className="space-y-4">
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/20" />
                 <input
                   type="email"
                   required
-                  placeholder="new-admin@example.com"
+                  placeholder="associate@andarivadu.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full rounded-md border border-input bg-background pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-ring"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-12 pr-6 py-4 text-foreground placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={busy}
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-60"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
               >
-                {busy ? "Generating..." : "Generate Link"}
+                {busy ? "Forging Link..." : "Generate Invitation"}
               </button>
             </form>
           </div>
 
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-foreground uppercase tracking-wider">Pending Invitations</h3>
-            <div className="space-y-3">
+          <div className="space-y-6">
+            <h3 className="text-[10px] uppercase tracking-[0.4em] text-accent font-bold">Pending Invitations</h3>
+            <div className="grid gap-4">
               {invitations.length === 0 ? (
-                <p className="text-sm text-muted-foreground italic">No pending invitations.</p>
+                <div className="py-8 text-center rounded-2xl border-2 border-dashed border-white/5 bg-white/5">
+                  <p className="text-xs text-white/20 uppercase tracking-widest italic">No summons pending.</p>
+                </div>
               ) : invitations.map((inv) => (
-                <div key={inv.id} className="flex items-center justify-between rounded-md border border-border bg-card p-4 shadow-sm">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{inv.email}</p>
-                    <p className="text-[10px] text-muted-foreground">Expires {format(new Date(inv.expires_at), 'PPP p')}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => copyInviteLink(inv.token, inv.id)}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
-                    >
-                      {copiedId === inv.id ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
-                      {copiedId === inv.id ? "Copied" : "Copy Link"}
-                    </button>
-                    <button
-                      onClick={() => deleteInvitation(inv.id)}
-                      className="rounded-md border border-destructive/20 bg-destructive/5 p-1.5 text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                <div key={inv.id} className="group relative rounded-xl border border-white/5 bg-black/20 p-5 transition-all hover:bg-black/40">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">{inv.email}</p>
+                      <div className="mt-1 flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                        <span>Expires {format(new Date(inv.expires_at), 'PPP')}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => copyInviteLink(inv.token, inv.id)}
+                        className="flex items-center gap-2 rounded-lg bg-white/5 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all"
+                      >
+                        {copiedId === inv.id ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                        {copiedId === inv.id ? "Copied" : "Copy Link"}
+                      </button>
+                      <button
+                        onClick={() => deleteInvitation(inv.id)}
+                        className="rounded-lg border border-destructive/20 bg-destructive/5 p-2 text-destructive hover:bg-destructive/20 transition-all"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

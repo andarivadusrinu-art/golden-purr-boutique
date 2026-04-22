@@ -36,17 +36,24 @@ function EditProduct() {
   }, [id]);
 
   return (
-    <AdminLayout title="Edit Product">
-      <div className="mb-6">
-        <h1 className="font-serif text-2xl text-primary">Edit Jewelry Piece</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Modify details for "{data?.name || '...'}"</p>
+    <AdminLayout title="Refining Masterpiece">
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-foreground">Refine Masterpiece</h1>
+        <p className="mt-2 text-muted-foreground">Polishing the details of "{data?.name || '...'}"</p>
       </div>
+
       {loading ? (
-        <div className="py-12 text-center text-muted-foreground">Loading...</div>
+        <div className="flex flex-col items-center justify-center py-24 space-y-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-accent border-r-transparent" />
+          <p className="text-xs uppercase tracking-widest text-accent font-bold">Retrieving the Treasure...</p>
+        </div>
       ) : data ? (
         <ProductForm initial={data} />
       ) : (
-        <div className="py-12 text-center text-muted-foreground">Product not found.</div>
+        <div className="text-center py-24 rounded-2xl border-2 border-dashed border-white/5 bg-white/5 backdrop-blur-md">
+          <p className="text-xl font-serif text-foreground">Treasure not found</p>
+          <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">The piece you are looking for has vanished from the archive.</p>
+        </div>
       )}
     </AdminLayout>
   );

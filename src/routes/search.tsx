@@ -42,19 +42,21 @@ function SearchPage() {
 
   return (
     <StorefrontLayout>
-      <div className="mx-auto max-w-7xl px-4 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
         <motion.div 
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4 border-b border-border pb-8"
+          className="flex flex-col md:flex-row md:items-center gap-6 border-b border-white/10 pb-12"
         >
-          <div className="rounded-full bg-primary/10 p-4">
-            <SearchIcon className="h-6 w-6 text-primary" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 text-accent shadow-lg shadow-accent/5 backdrop-blur-sm">
+            <SearchIcon className="h-8 w-8" />
           </div>
           <div>
-            <h1 className="font-serif text-3xl text-primary">Search Results</h1>
-            <p className="text-sm text-muted-foreground">
-              {q ? `Showing results for "${q}"` : "Enter a search term in the header to find pieces"}
+            <h1 className="font-serif text-4xl md:text-5xl text-foreground">Search Results</h1>
+            <p className="mt-2 text-base text-muted-foreground">
+              {q ? (
+                <>Showing treasures matching <span className="text-accent font-medium">"{q}"</span></>
+              ) : "Enter a search term in the header to find pieces"}
             </p>
           </div>
         </motion.div>

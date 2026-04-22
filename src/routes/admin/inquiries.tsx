@@ -50,63 +50,86 @@ function AdminInquiries() {
   }
 
   return (
-    <AdminLayout title="Inquiries">
-      <div className="mb-6">
-        <h1 className="font-serif text-2xl text-primary">Customer Inquiries</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Messages sent through the contact form</p>
+    <AdminLayout title="Customer Inquiries">
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-foreground">Inquiry Vault</h1>
+        <p className="mt-2 text-muted-foreground">Manage and respond to customer requests from across the world.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {loading ? (
-          <p className="text-center py-12 text-muted-foreground">Loading inquiries...</p>
+          <div className="flex flex-col items-center justify-center py-24 space-y-4">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-accent border-r-transparent" />
+            <p className="text-xs uppercase tracking-widest text-accent font-bold">Consulting the Oracle...</p>
+          </div>
         ) : inquiries.length === 0 ? (
-          <div className="text-center py-12 rounded-md border border-dashed border-border bg-card">
-            <Mail className="mx-auto h-12 w-12 text-muted-foreground/50" />
-            <p className="mt-4 text-muted-foreground">No inquiries found.</p>
+          <div className="text-center py-24 rounded-2xl border-2 border-dashed border-white/5 bg-white/5 backdrop-blur-md">
+            <Mail className="mx-auto h-16 w-16 text-white/10" />
+            <p className="mt-6 text-xl font-serif text-foreground">The vault is empty</p>
+            <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">No customer messages found yet.</p>
           </div>
         ) : (
           inquiries.map((iq) => (
-            <div key={iq.id} className="rounded-md border border-border bg-card p-6 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex-1 min-w-[300px]">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-medium text-foreground">{iq.name}</h3>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      iq.status === 'new' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'
+            <div key={iq.id} className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 transition-all hover:border-accent/30 hover:bg-white/10 shadow-xl overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+                <Mail className="h-32 w-32" />
+              </div>
+
+              <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
+                <div className="flex-1 space-y-6">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
+                      {iq.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-xl text-foreground group-hover:text-accent transition-colors">{iq.name}</h3>
+                      <p className="text-sm text-muted-foreground">{iq.email}</p>
+                    </div>
+                    <span className={`ml-2 rounded-full px-3 py-0.5 text-[9px] font-bold uppercase tracking-widest border ${
+                      iq.status === 'new' 
+                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' 
+                      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                     }`}>
                       {iq.status}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{iq.email}</p>
-                  <p className="mt-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap">{iq.message}</p>
-                  <p className="mt-4 text-[10px] text-muted-foreground">
-                    Received on {format(new Date(iq.created_at), 'PPP p')}
-                  </p>
+
+                  <div className="relative rounded-xl bg-black/20 p-6 border border-white/5">
+                    <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap italic">
+                      "{iq.message}"
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[10px] text-white/20 uppercase tracking-[0.2em] font-bold">
+                    <Clock className="h-3 w-3" />
+                    {format(new Date(iq.created_at), 'PPP p')}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
+
+                <div className="flex flex-row md:flex-col gap-3 min-w-[140px]">
                   {iq.status === 'new' ? (
                     <button
                       onClick={() => updateStatus(iq.id, 'read')}
-                      className="flex items-center gap-1.5 rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
                     >
-                      <CheckCircle className="h-3.5 w-3.5" />
+                      <CheckCircle className="h-4 w-4" />
                       Mark Read
                     </button>
                   ) : (
                     <button
                       onClick={() => updateStatus(iq.id, 'new')}
-                      className="flex items-center gap-1.5 rounded-md bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-amber-500/10 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
                     >
-                      <Clock className="h-3.5 w-3.5" />
-                      Mark Unread
+                      <Clock className="h-4 w-4" />
+                      Mark New
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(iq.id)}
-                    className="flex items-center gap-1.5 rounded-md bg-destructive/10 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/20"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-destructive/10 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Delete
+                    <Trash2 className="h-4 w-4" />
+                    Archive
                   </button>
                 </div>
               </div>

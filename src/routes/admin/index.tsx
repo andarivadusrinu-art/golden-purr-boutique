@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
-import { Package, Inbox, Star, Settings } from "lucide-react";
+import { Package, Inbox, Star, Settings, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminOverview,
@@ -36,23 +36,23 @@ function AdminOverview() {
   }, []);
 
   const cards = [
-    { label: "Total Products", value: stats.products, icon: Package, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "New Inquiries", value: stats.inquiries, icon: Inbox, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Featured Pieces", value: stats.featured, icon: Star, color: "text-purple-600", bg: "bg-purple-50" },
-    { label: "Shop Settings", value: "Active", icon: Settings, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Total Products", value: stats.products, icon: Package, color: "text-accent", bg: "bg-accent/10" },
+    { label: "New Inquiries", value: stats.inquiries, icon: Inbox, color: "text-accent", bg: "bg-accent/10" },
+    { label: "Featured Pieces", value: stats.featured, icon: Star, color: "text-accent", bg: "bg-accent/10" },
+    { label: "Shop Settings", value: "Active", icon: Settings, color: "text-accent", bg: "bg-accent/10" },
   ];
 
   return (
     <AdminLayout title="Overview">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <div key={card.label} className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition-all hover:border-accent/30 hover:bg-white/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{card.label}</p>
-                <p className="mt-2 text-3xl font-bold text-foreground">{card.value}</p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">{card.label}</p>
+                <p className="mt-3 text-4xl font-bold text-foreground font-serif">{card.value}</p>
               </div>
-              <div className={`rounded-full p-3 ${card.bg}`}>
+              <div className={`rounded-xl p-4 ${card.bg} group-hover:scale-110 transition-transform duration-300`}>
                 <card.icon className={`h-6 w-6 ${card.color}`} />
               </div>
             </div>
@@ -60,21 +60,26 @@ function AdminOverview() {
         ))}
       </div>
 
-      <div className="mt-12">
-        <h2 className="font-serif text-2xl text-primary">Quick Actions</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <Link to="/admin/products" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
-            <p className="font-medium text-foreground">Manage Products</p>
-            <p className="mt-1 text-sm text-muted-foreground">Add or edit jewelry pieces</p>
-          </Link>
-          <Link to="/admin/inquiries" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
-            <p className="font-medium text-foreground">Check Inquiries</p>
-            <p className="mt-1 text-sm text-muted-foreground">View customer messages</p>
-          </Link>
-          <Link to="/admin/settings" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
-            <p className="font-medium text-foreground">Site Settings</p>
-            <p className="mt-1 text-sm text-muted-foreground">Update shop details</p>
-          </Link>
+      <div className="mt-16">
+        <h2 className="font-serif text-3xl text-foreground">Quick Actions</h2>
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {[
+            { to: "/admin/products", title: "Manage Products", desc: "Add or edit jewelry pieces" },
+            { to: "/admin/inquiries", title: "Check Inquiries", desc: "View customer messages" },
+            { to: "/admin/settings", title: "Site Settings", desc: "Update shop details" }
+          ].map((action) => (
+            <Link 
+              key={action.to}
+              to={action.to as any} 
+              className="group rounded-2xl border border-white/5 bg-white/5 p-8 transition-all hover:border-accent/20 hover:bg-white/10"
+            >
+              <p className="font-serif text-xl text-foreground group-hover:text-accent transition-colors">{action.title}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{action.desc}</p>
+              <div className="mt-6 flex items-center text-[10px] uppercase tracking-[0.2em] text-accent font-bold opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                Open Page <ChevronRight className="h-3 w-3 ml-1" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </AdminLayout>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ShieldCheck, UserPlus, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/setup")({
   head: () => ({ meta: [{ title: "Admin Setup | Aurum" }] }),
@@ -65,14 +66,23 @@ function SetupPage() {
   if (adminExists === null) return <div className="flex min-h-screen items-center justify-center">Checking...</div>;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4">
-      <div className="w-full max-w-md rounded-md border border-border bg-card p-8 shadow-xl">
+    <div className="relative flex min-h-screen items-center justify-center px-4 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-accent/10 blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl md:p-10"
+      >
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <ShieldCheck className="h-6 w-6" />
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 text-accent shadow-lg shadow-accent/5">
+            <ShieldCheck className="h-8 w-8" />
           </div>
-          <h1 className="font-serif text-3xl text-primary">Admin Setup</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h1 className="font-serif text-4xl text-foreground">Admin Setup</h1>
+          <p className="mt-4 text-base text-muted-foreground">
             {adminExists 
               ? "Initial setup is already complete." 
               : "Create the primary administrator account for your shop."}
@@ -80,53 +90,54 @@ function SetupPage() {
         </div>
 
         {adminExists ? (
-          <div className="space-y-4 text-center">
-            <p className="text-sm text-foreground">
+          <div className="space-y-6 text-center">
+            <p className="text-base text-foreground/80">
               An administrator already exists. Please use the login page to access the dashboard.
             </p>
             <Link
               to="/admin/login"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-accent px-6 py-4 text-sm font-bold text-accent-foreground hover:opacity-90 shadow-lg shadow-accent/20 transition-all"
             >
               Go to Login <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSetup} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Admin Email</label>
+          <form onSubmit={handleSetup} className="space-y-6">
+            <div className="space-y-2">
+              <label className="block text-xs uppercase tracking-widest text-accent font-medium">Admin Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm focus:ring-2 focus:ring-ring"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-foreground focus:ring-2 focus:ring-accent/50 outline-none transition-all placeholder:text-foreground/20"
                 placeholder="admin@example.com"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Secure Password</label>
+            <div className="space-y-2">
+              <label className="block text-xs uppercase tracking-widest text-accent font-medium">Secure Password</label>
               <input
                 type="password"
                 required
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm focus:ring-2 focus:ring-ring"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-foreground focus:ring-2 focus:ring-accent/50 outline-none transition-all placeholder:text-foreground/20"
+                placeholder="••••••••"
               />
-              <p className="mt-1 text-[10px] text-muted-foreground">Minimum 8 characters.</p>
+              <p className="mt-1 text-[10px] text-muted-foreground text-center">Minimum 8 characters.</p>
             </div>
             <button
               type="submit"
               disabled={busy}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-3 rounded-xl bg-accent py-4 text-sm font-bold text-accent-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 shadow-lg shadow-accent/20"
             >
-              <UserPlus className="h-4 w-4" />
+              <UserPlus className="h-5 w-5" />
               {busy ? "Setting up..." : "Create Admin Account"}
             </button>
           </form>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

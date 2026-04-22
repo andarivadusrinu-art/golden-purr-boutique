@@ -24,11 +24,17 @@ function InvitePage() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    async function checkInvite() {
-      // Get current user if any
-      const { data: { session } } = await supabase.auth.getSession();
+    // Initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+    });
 
+    // Realtime listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    async function checkInvite() {
       // Verify invitation
       const { data, error } = await supabase
         .from("admin_invitations")
@@ -47,6 +53,8 @@ function InvitePage() {
       setLoading(false);
     }
     checkInvite();
+
+    return () => subscription.unsubscribe();
   }, [token]);
 
   async function handleAccept() {
@@ -85,28 +93,28 @@ function InvitePage() {
   }
 
   if (loading) return (
-    <div className="flex min-h-screen items-center justify-center bg-primary">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-r-transparent" />
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="h-12 w-12 animate-spin rounded-full border-4 border-accent border-r-transparent" />
     </div>
   );
 
   if (!invitation && !accepted) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center bg-primary px-4 overflow-hidden text-center">
+      <div className="relative flex min-h-screen items-center justify-center px-4 overflow-hidden text-center">
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-destructive/10 blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-destructive/10 blur-[120px]" />
         </div>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl"
+          className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl md:p-10"
         >
           <ShieldAlert className="mx-auto h-16 w-16 text-destructive" />
-          <h1 className="mt-6 font-serif text-3xl text-white">Invalid Link</h1>
+          <h1 className="mt-6 font-serif text-4xl text-white">Invalid Link</h1>
           <p className="mt-4 text-white/60">
             This invitation link is invalid, expired, or has already been used.
           </p>
-          <Link to="/" className="mt-8 inline-block rounded-md bg-white/10 px-6 py-2 text-sm font-medium text-white hover:bg-white/20 transition-all">
+          <Link to="/" className="mt-8 inline-block rounded-xl bg-white/10 px-8 py-3 text-sm font-medium text-white hover:bg-white/20 transition-all">
             Back to Home
           </Link>
         </motion.div>
@@ -116,14 +124,14 @@ function InvitePage() {
 
   if (accepted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-primary px-4">
+      <div className="flex min-h-screen items-center justify-center px-4">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-xl"
+          className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-xl md:p-10"
         >
           <CheckCircle2 className="mx-auto h-16 w-16 text-accent" />
-          <h1 className="mt-6 font-serif text-3xl text-white">Welcome Aboard!</h1>
+          <h1 className="mt-6 font-serif text-4xl text-white">Welcome Aboard!</h1>
           <p className="mt-4 text-white/60">Your admin account is ready. Redirecting you to the dashboard...</p>
         </motion.div>
       </div>
@@ -131,15 +139,15 @@ function InvitePage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-primary px-4 overflow-hidden">
+    <div className="relative flex min-h-screen items-center justify-center px-4 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-accent/10 blur-[120px]" />
       </div>
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl"
+        className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl md:p-10"
       >
         <div className="mb-10 text-center">
           <Link to="/" className="mb-8 block text-center font-serif text-3xl text-accent font-bold tracking-tight">AndarivaduSrinu</Link>

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, LogOut } from "lucide-react";
+import { toast } from "sonner";
 
 const NAV = [
   { to: "/category/$slug", params: { slug: "necklaces" }, label: "Necklaces" },
@@ -19,8 +20,26 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    // Initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) checkAdmin(session.user.id);
+    });
+
+    // Realtime listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdmin(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
     supabase
       .from("shop_settings")
       .select("shop_name")
@@ -29,7 +48,25 @@ export function Header() {
       .then(({ data }) => {
         if (data?.shop_name) setShopName(data.shop_name);
       });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  async function checkAdmin(userId: string) {
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    setIsAdmin(!!data);
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully");
+    navigate({ to: "/" });
+  }
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -54,16 +91,32 @@ export function Header() {
                 key={n.label}
                 to={n.to}
                 {...(n as any).params ? { params: (n as any).params } : {}}
-                className="relative text-sm font-medium text-white transition-colors hover:text-accent group"
-                activeProps={{ className: "text-accent font-bold" }}
+                className="relative text-sm font-medium transition-all py-2 group"
               >
-                {n.label}
-                <motion.span
-                  className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all group-hover:w-full"
-                  layoutId={`nav-underline-${n.label}`}
-                />
+                {({ isActive }) => (
+                  <>
+                    <span className={isActive ? "text-accent font-bold" : "text-white/60 group-hover:text-accent"}>
+                      {n.label}
+                    </span>
+                    {/* Active/Hover underline */}
+                    <motion.span
+                      className={`absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full opacity-40"}`}
+                    />
+                  </>
+                )}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="relative text-sm font-medium text-accent transition-colors hover:text-white group"
+              >
+                Admin
+                <motion.span
+                  className="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all group-hover:w-full"
+                />
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center gap-2 border-l border-border pl-4 md:pl-8">
@@ -107,6 +160,16 @@ export function Header() {
               )}
             </AnimatePresence>
 
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="p-1.5 text-white hover:text-destructive transition-colors"
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            )}
+
             <button
               aria-label="Toggle menu"
               className="md:hidden text-white ml-2 p-1.5"
@@ -123,19 +186,22 @@ export function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-primary text-primary-foreground md:hidden"
+            className="overflow-hidden border-t border-white/10 bg-black/40 backdrop-blur-xl md:hidden"
           >
-            <div className="mx-auto flex max-w-7xl flex-col px-4 py-4 space-y-1">
+            <div className="mx-auto flex max-w-7xl flex-col px-4 py-8 space-y-2">
               {NAV.map((n) => (
                 <Link
                   key={n.label}
                   to={n.to}
                   {...(n as any).params ? { params: (n as any).params } : {}}
                   onClick={() => setOpen(false)}
-                  className="py-3 text-lg font-medium text-primary-foreground/80 transition-colors hover:text-accent active:bg-white/10 rounded-md px-2"
-                  activeProps={{ className: "text-accent bg-white/5" }}
+                  className="group relative overflow-hidden rounded-xl px-4 py-4 text-xl font-medium text-white/80 transition-all hover:bg-white/10 hover:text-accent"
+                  activeProps={{ className: "text-accent bg-white/5 font-bold" }}
                 >
-                  {n.label}
+                  <span className="relative z-10">{n.label}</span>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
                 </Link>
               ))}
             </div>

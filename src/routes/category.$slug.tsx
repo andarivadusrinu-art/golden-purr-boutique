@@ -72,12 +72,12 @@ function CategoryPage() {
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mx-auto max-w-7xl px-4 py-12 text-center md:py-16"
+          className="mx-auto max-w-7xl px-4 py-8 text-center md:py-10"
         >
-          <p className="text-xs uppercase tracking-[0.3em] text-gold">Collection</p>
-          <h1 className="mt-3 font-serif text-4xl text-primary md:text-5xl">{category.name}</h1>
+          <p className="text-[10px] uppercase tracking-[0.4em] text-accent font-bold">Collection</p>
+          <h1 className="mt-2 font-serif text-3xl text-foreground md:text-4xl">{category.name}</h1>
           {category.description && (
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">{category.description}</p>
+            <p className="mx-auto mt-2 max-w-xl text-xs text-muted-foreground">{category.description}</p>
           )}
         </motion.div>
       </div>
