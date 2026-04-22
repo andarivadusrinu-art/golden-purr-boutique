@@ -1,6 +1,4 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-
-import appCss from "../styles.css?url";
+import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -25,49 +23,14 @@ function NotFoundComponent() {
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AndarivaduSrinu — 1g Gold Jewelry" },
-      { name: "description", content: "AndarivaduSrinu is a boutique store for 1 gram gold jewelry — necklaces, rings, earrings and nose rings." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "AndarivaduSrinu — 1g Gold Jewelry" },
-      { property: "og:description", content: "Boutique 1 gram gold jewelry — necklaces, rings, earrings and nose rings." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "AndarivaduSrinu — 1g Gold Jewelry" },
-      { name: "twitter:description", content: "Boutique 1 gram gold jewelry — necklaces, rings, earrings and nose rings." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/866fc86e-b5eb-420e-82e4-27ec4706b52f/id-preview-b7965825--fa4bd0bb-c371-443a-83ae-90b5954d4bfb.lovable.app-1776704342993.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/866fc86e-b5eb-420e-82e4-27ec4706b52f/id-preview-b7965825--fa4bd0bb-c371-443a-83ae-90b5954d4bfb.lovable.app-1776704342993.png" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
 
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }
