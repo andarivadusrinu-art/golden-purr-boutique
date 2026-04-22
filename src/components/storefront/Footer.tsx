@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="mt-20 border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-3">
         <div>
-          <h3 className="font-serif text-2xl text-primary">Aurum 1g Gold</h3>
+          <h3 className="font-serif text-2xl text-primary">AndarivaduSrinu</h3>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             Pure 1 gram gold jewellery, crafted with heart and the care of generations.
           </p>
@@ -26,8 +26,8 @@ export function Footer() {
           </p>
         </div>
       </div>
-      <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Aurum 1g Gold. All rights reserved.
+      <div className="mt-12 border-t border-border pt-8 text-center text-xs text-muted-foreground">
+        <p>© {new Date().getFullYear()} AndarivaduSrinu. All rights reserved.</p>
       </div>
     </footer>
   );

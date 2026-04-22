@@ -204,7 +204,7 @@ CREATE INDEX idx_products_featured ON public.products(is_featured) WHERE is_feat
 
 -- Shop Settings
 INSERT INTO public.shop_settings (id, shop_name, tagline, whatsapp_number) 
-VALUES (1, 'Aurum 1g Gold', 'Pure 1 gram gold jewellery, crafted with heart', '919999999999')
+VALUES (1, 'AndarivaduSrinu', 'Pure 1 gram gold jewellery, crafted with heart', '919999999999')
 ON CONFLICT (id) DO UPDATE SET shop_name = EXCLUDED.shop_name, tagline = EXCLUDED.tagline, whatsapp_number = EXCLUDED.whatsapp_number;
 
 -- Categories

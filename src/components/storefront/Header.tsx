@@ -41,10 +41,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="font-serif text-2xl font-semibold tracking-wide text-primary md:text-3xl">
-            {shopName}
-          </span>
+        <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-primary">
+          AndarivaduSrinu
         </Link>
         
         <div className="flex items-center gap-4 md:gap-8">

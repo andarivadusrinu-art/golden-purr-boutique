@@ -14,13 +14,13 @@ interface Category {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aurum 1g Gold — Pure 1 Gram Gold Jewellery Online" },
+      { title: "AndarivaduSrinu — Pure 1 Gram Gold Jewellery Online" },
       {
         name: "description",
         content:
           "Shop authentic 1 gram gold jewellery: necklaces, rings, earrings & nose rings. Hallmarked, traditional & modern designs. Enquire instantly on WhatsApp.",
       },
-      { property: "og:title", content: "Aurum 1g Gold — Pure 1 Gram Gold Jewellery" },
+      { property: "og:title", content: "AndarivaduSrinu — Pure 1 Gram Gold Jewellery" },
       {
         property: "og:description",
         content: "Necklaces, rings, earrings and nose rings in pure 1 gram gold. Enquire on WhatsApp.",

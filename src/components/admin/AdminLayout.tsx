@@ -34,7 +34,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border bg-card md:flex">
         <div className="flex h-16 items-center border-b border-border px-6">
-          <Link to="/" className="font-serif text-xl text-primary">Aurum Admin</Link>
+          <Link to="/" className="font-serif text-xl text-primary font-bold">AndarivaduSrinu</Link>
         </div>
         <nav className="flex-1 space-y-1 p-4">
           {SIDEBAR_LINKS.map((link) => (
