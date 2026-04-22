@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { AdminShell } from "@/components/storefront/AdminShell";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { ProductForm } from "@/components/storefront/ProductForm";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -36,9 +36,18 @@ function EditProduct() {
   }, [id]);
 
   return (
-    <AdminShell>
-      <h1 className="mb-6 font-serif text-2xl text-primary">Edit Product</h1>
-      {loading ? <p>Loading…</p> : data ? <ProductForm initial={data} /> : <p>Not found.</p>}
-    </AdminShell>
+    <AdminLayout title="Edit Product">
+      <div className="mb-6">
+        <h1 className="font-serif text-2xl text-primary">Edit Jewelry Piece</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Modify details for "{data?.name || '...'}"</p>
+      </div>
+      {loading ? (
+        <div className="py-12 text-center text-muted-foreground">Loading...</div>
+      ) : data ? (
+        <ProductForm initial={data} />
+      ) : (
+        <div className="py-12 text-center text-muted-foreground">Product not found.</div>
+      )}
+    </AdminLayout>
   );
 }

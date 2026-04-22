@@ -102,13 +102,23 @@ function AdminLogin() {
           >
             {busy ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Account"}
           </button>
-          <button
-            type="button"
-            onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); }}
-            className="w-full text-center text-xs text-muted-foreground hover:text-primary"
-          >
-            {mode === "signin" ? "First time? Create an account" : "Have an account? Sign in"}
-          </button>
+          
+          <div className="flex flex-col gap-3 pt-2 text-center">
+            <button
+              type="button"
+              onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); }}
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              {mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in"}
+            </button>
+            
+            <Link
+              to="/forgot-password"
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              Forgot your password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>

@@ -35,7 +35,6 @@ export function ProductCard({ p }: { p: ProductCardData }) {
         <p className="mt-1 text-xs uppercase tracking-wider text-gold">
           {Number(p.gold_weight_grams).toFixed(0)}g · {p.purity}
         </p>
-        <p className="mt-2 text-base font-medium text-primary">{formatINR(p.price_inr)}</p>
       </div>
     </Link>
   );

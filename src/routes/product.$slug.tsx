@@ -112,7 +112,6 @@ function ProductPage() {
               {Number(product.gold_weight_grams).toFixed(0)}g · {product.purity} Gold
             </p>
             <h1 className="mt-3 font-serif text-3xl text-primary md:text-4xl">{product.name}</h1>
-            <p className="mt-4 text-2xl font-medium text-foreground">{formatINR(product.price_inr)}</p>
             {product.description && (
               <p className="mt-6 text-base leading-relaxed text-muted-foreground">{product.description}</p>
             )}

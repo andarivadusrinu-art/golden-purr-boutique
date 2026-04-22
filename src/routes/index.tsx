@@ -64,13 +64,15 @@ function Index() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/category/necklaces"
+                to="/category/$slug"
+                params={{ slug: "necklaces" }}
                 className="rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
               >
                 Shop Collection
               </Link>
               <Link
-                to="/category/rings"
+                to="/category/$slug"
+                params={{ slug: "rings" }}
                 className="rounded-md border border-primary px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 Explore Rings
@@ -81,7 +83,7 @@ function Index() {
             <img
               src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=900&q=80"
               alt="Elegant 1 gram gold jewellery"
-              className="aspect-[4/5] w-full rounded-md object-cover shadow-2xl"
+              className="aspect-[3/2] w-full rounded-md object-cover shadow-2xl md:aspect-video"
             />
           </div>
         </div>

@@ -1,113 +1,82 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { AdminShell } from "@/components/storefront/AdminShell";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
-import { formatINR } from "@/lib/format";
-
-interface Row {
-  id: string;
-  slug: string;
-  name: string;
-  price_inr: number | string | null;
-  is_active: boolean;
-  is_featured: boolean;
-  image_url: string | null;
-  category_id: string | null;
-}
+import { Package, Inbox, Star, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
-  head: () => ({ meta: [{ title: "Admin · Products" }] }),
-  component: AdminProducts,
+  component: AdminOverview,
 });
 
-function AdminProducts() {
-  const [rows, setRows] = useState<Row[]>([]);
-  const [loading, setLoading] = useState(true);
+function AdminOverview() {
+  const [stats, setStats] = useState({
+    products: 0,
+    inquiries: 0,
+    categories: 0,
+    featured: 0,
+  });
 
-  async function load() {
-    setLoading(true);
-    const { data } = await supabase
-      .from("products")
-      .select("id, slug, name, price_inr, is_active, is_featured, image_url, category_id")
-      .order("created_at", { ascending: false });
-    setRows((data ?? []) as Row[]);
-    setLoading(false);
-  }
+  useEffect(() => {
+    async function loadStats() {
+      const [p, i, c, f] = await Promise.all([
+        supabase.from("products").select("id", { count: "exact", head: true }),
+        supabase.from("inquiries").select("id", { count: "exact", head: true }),
+        supabase.from("categories").select("id", { count: "exact", head: true }),
+        supabase.from("products").select("id", { count: "exact", head: true }).eq("is_featured", true),
+      ]);
 
-  useEffect(() => { load(); }, []);
+      setStats({
+        products: p.count ?? 0,
+        inquiries: i.count ?? 0,
+        categories: c.count ?? 0,
+        featured: f.count ?? 0,
+      });
+    }
+    loadStats();
+  }, []);
 
-  async function remove(id: string) {
-    if (!confirm("Delete this product? This cannot be undone.")) return;
-    await supabase.from("products").delete().eq("id", id);
-    load();
-  }
-
-  async function toggleActive(id: string, current: boolean) {
-    await supabase.from("products").update({ is_active: !current }).eq("id", id);
-    load();
-  }
+  const cards = [
+    { label: "Total Products", value: stats.products, icon: Package, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: "New Inquiries", value: stats.inquiries, icon: Inbox, color: "text-amber-600", bg: "bg-amber-50" },
+    { label: "Featured Pieces", value: stats.featured, icon: Star, color: "text-purple-600", bg: "bg-purple-50" },
+    { label: "Shop Settings", value: "Active", icon: Settings, color: "text-emerald-600", bg: "bg-emerald-50" },
+  ];
 
   return (
-    <AdminShell>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-serif text-2xl text-primary">Products</h1>
-        <Link to="/admin/new" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
-          + Add Product
-        </Link>
+    <AdminLayout title="Overview">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {cards.map((card) => (
+          <div key={card.label} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">{card.label}</p>
+                <p className="mt-2 text-3xl font-bold text-foreground">{card.value}</p>
+              </div>
+              <div className={`rounded-full p-3 ${card.bg}`}>
+                <card.icon className={`h-6 w-6 ${card.color}`} />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-      {loading ? (
-        <p className="text-muted-foreground">Loading…</p>
-      ) : rows.length === 0 ? (
-        <p className="text-muted-foreground">No products yet. Add your first one.</p>
-      ) : (
-        <div className="overflow-x-auto rounded-md border border-border bg-card">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-secondary/60 text-xs uppercase tracking-wider text-muted-foreground">
-              <tr>
-                <th className="p-3">Image</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Active</th>
-                <th className="p-3">Featured</th>
-                <th className="p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className="border-t border-border">
-                  <td className="p-3">
-                    {r.image_url ? (
-                      <img src={r.image_url} alt={r.name} className="h-12 w-12 rounded object-cover" />
-                    ) : (
-                      <div className="h-12 w-12 rounded bg-secondary" />
-                    )}
-                  </td>
-                  <td className="p-3">
-                    <div className="font-medium text-foreground">{r.name}</div>
-                    <div className="text-xs text-muted-foreground">{r.slug}</div>
-                  </td>
-                  <td className="p-3 text-foreground">{formatINR(r.price_inr)}</td>
-                  <td className="p-3">
-                    <button
-                      onClick={() => toggleActive(r.id, r.is_active)}
-                      className={`rounded-full px-2.5 py-0.5 text-xs ${
-                        r.is_active ? "bg-gold/30 text-foreground" : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {r.is_active ? "Active" : "Hidden"}
-                    </button>
-                  </td>
-                  <td className="p-3">{r.is_featured ? "★" : "—"}</td>
-                  <td className="p-3 text-right">
-                    <Link to="/admin/$id" params={{ id: r.id }} className="text-primary hover:underline">Edit</Link>
-                    <button onClick={() => remove(r.id)} className="ml-3 text-destructive hover:underline">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div className="mt-12">
+        <h2 className="font-serif text-2xl text-primary">Quick Actions</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <Link to="/admin/products" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
+            <p className="font-medium text-foreground">Manage Products</p>
+            <p className="mt-1 text-sm text-muted-foreground">Add or edit jewelry pieces</p>
+          </Link>
+          <Link to="/admin/inquiries" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
+            <p className="font-medium text-foreground">Check Inquiries</p>
+            <p className="mt-1 text-sm text-muted-foreground">View customer messages</p>
+          </Link>
+          <Link to="/admin/settings" className="rounded-md border border-border bg-card p-4 transition-colors hover:bg-secondary/50">
+            <p className="font-medium text-foreground">Site Settings</p>
+            <p className="mt-1 text-sm text-muted-foreground">Update shop details</p>
+          </Link>
         </div>
-      )}
-    </AdminShell>
+      </div>
+    </AdminLayout>
   );
 }

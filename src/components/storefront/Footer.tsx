@@ -7,22 +7,22 @@ export function Footer() {
         <div>
           <h3 className="font-serif text-2xl text-primary">Aurum 1g Gold</h3>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            Pure 1 gram gold jewellery, crafted with the care of generations.
+            Pure 1 gram gold jewellery, crafted with heart and the care of generations.
           </p>
         </div>
         <div>
-          <h4 className="font-serif text-lg text-foreground">Shop</h4>
+          <h4 className="font-serif text-lg text-foreground">Quick Links</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/category/necklaces" className="hover:text-primary">Necklaces & Neck Sets</Link></li>
-            <li><Link to="/category/rings" className="hover:text-primary">Rings</Link></li>
-            <li><Link to="/category/earrings" className="hover:text-primary">Earrings</Link></li>
-            <li><Link to="/category/nose-rings" className="hover:text-primary">Nose Rings</Link></li>
+            <li><Link to="/category/$slug" params={{ slug: "necklaces" }} className="hover:text-primary">Necklaces & Neck Sets</Link></li>
+            <li><Link to="/category/$slug" params={{ slug: "rings" }} className="hover:text-primary">Rings</Link></li>
+            <li><Link to="/about" className="hover:text-primary">Our Story</Link></li>
+            <li><Link to="/contact" className="hover:text-primary">Contact Us</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-serif text-lg text-foreground">About</h4>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Every piece is hallmarked. Enquire on WhatsApp for personalised assistance and current gold rates.
+          <h4 className="font-serif text-lg text-foreground">Our Promise</h4>
+          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+            Every piece is hallmarked and inspected for quality. Enquire on WhatsApp for personalised assistance, current gold rates and custom orders.
           </p>
         </div>
       </div>
